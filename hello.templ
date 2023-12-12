@@ -1,0 +1,191 @@
+package main
+
+import (
+	"fmt"
+)
+
+templ Head() {
+	<!DOCTYPE html>
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>Document</title>
+		<link
+ 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+ 			rel="stylesheet"
+ 			integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+ 			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="assets/style.css"/>
+		<script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+	</head>
+}
+
+templ Nav() {
+	<nav class="shadow-lg">
+		<div class="go-nav">
+			<img class="go-icon" src="assets/nav-icon/golang-1.svg"/>
+			<h3 class="proj-name">Projeto</h3>
+		</div>
+		<div class="nav-items">
+			<ul>
+				<li>Faq</li>
+				<li>Informações</li>
+				<li>Sobre nós</li>
+			</ul>
+		</div>
+	</nav>
+}
+
+templ UserInfo(userInfo UserData) {
+	<div class="modal-body">
+		<p>Id: { fmt.Sprintf("%d", userInfo.ID) }</p>
+		<p>Firstname: { userInfo.Firstname }</p>
+		<p>Lastname: { userInfo.Lastname }</p>
+		<p>Email: { userInfo.Email }</p>
+		<p>Phone: { userInfo.Phone }</p>
+		<p>Birthday: { userInfo.Birthday }</p>
+		<p>Gender: { userInfo.Gender }</p>
+		<h2>Endereço</h2>
+		<p>StreetName: { userInfo.Address.StreetName }</p>
+		<p>City: { userInfo.Address.City }</p>
+		<p>Zipcode: { userInfo.Address.Zipcode }</p>
+		<p>CountyCode: { userInfo.Address.CountyCode }</p>
+	</div>
+}
+
+templ Main(allData Users, images []string) {
+	@Head()
+	@Nav()
+	@InsertDate()
+	@SearchUserBar(allData)
+	<main class="contacts">
+		for i, userData := range allData.Data {
+			@RenderAllUser(userData.ID, userData.Firstname, userData.Phone, userData.Email, images[i])
+			<div class="modal fade" id={ fmt.Sprintf("exampleModal%d", userData.ID) } tabindex="-1" aria-labelledby={ fmt.Sprintf("exampleModalLabel%d", userData.ID) } aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id={ fmt.Sprintf("exampleModalLabel%d", userData.ID) }>Informações</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						@UserInfo(userData)
+						@DeleteFellow(userData)
+					</div>
+				</div>
+			</div>
+		}
+	</main>
+}
+
+templ RenderAllUser(Id int, FirstName, Tel, Email, imageName string) {
+	<div id={ fmt.Sprintf("cardDivId%d", Id) } class="user-element">
+		<div class="contact-card">
+			<div>
+				<div class="align-all">
+					<img class="person-icon" src={ fmt.Sprintf("assets/people/%s", imageName) }/>
+					<h3 class="icon-name-text">{ FirstName }</h3>
+				</div>
+				<div>
+					<div class="info-group">
+						<img class="person-icon-tel" src="assets/icons/telephone.svg"/>
+						<p>{ Tel }</p>
+					</div>
+					<div class="info-group">
+						<img class="person-icon-email" src="assets/icons/email.svg"/>
+						<p>{ Email }</p>
+					</div>
+				</div>
+				<button type="button" class="btn btn-primary btnPlus" data-bs-toggle="modal" data-bs-target={ fmt.Sprintf("#exampleModal%d", Id) }>+Mais</button>
+			</div>
+		</div>
+	</div>
+}
+
+templ InsertDate() {
+	<div class="p-4 d-flex justify-content-center">
+		<form class="form-floating" action="/" method="post">
+			<h3 class="text-center">fetch new group user data</h3>
+			<div class="d-flex">
+				<input type="date" class="form-control w-100" name="start_date"/>
+				<input type="date" class="form-control btnDate w-100" name="end_date"/>
+				<button class="btn btn-primary btnDate" type="submit" id="submitButton">
+					Enviar
+					@ButtonSpinner()
+				</button>
+			</div>
+			<div>
+				<input type="range" class="form-range" min="0" max="20" step="1" name="people_amount"/>
+			</div>
+		</form>
+	</div>
+	@SpinnerJS()
+}
+
+templ ButtonSpinner() {
+	<span class="spinner-border spinner-border-sm spinner" id="spinner" role="status" aria-hidden="true"></span>
+}
+
+templ SpinnerJS() {
+	<script>
+	function handleButton(button) {
+		var spinner = button.querySelector(".spinner-border");
+		spinner.style.display = "inline-block"
+				    setTimeout(function () {
+        button.disabled = true;
+      }, 50);
+	}
+
+	var button = document.getElementById("submitButton");
+	button.addEventListener("click", function(event) {
+		handleButton(button);
+	});
+	 </script>
+}
+
+templ DeleteFellow(userData UserData) {
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-danger" hx-swap="delete" hx-delete="/dummyDelete" hx-target={ fmt.Sprintf("#cardDivId%d", userData.ID) } data-bs-dismiss="modal">Delete</button>
+		@ModalPDFButton(userData)
+	</div>
+}
+
+templ ModalPDFButton(u UserData) {
+	<button type="button" class="btn btn-danger" htmx-post="/download-pdf" hx-trigger="click">Download</button>
+}
+
+templ SearchUserBar(allUsers Users) {
+	<div class="search-wrapper search-bar ">
+		<input
+ 			class="form-control"
+ 			type="search"
+ 			name="search"
+ 			id="search"
+ 			placeholder="search users..."
+		/>
+	</div>
+	@SearchUserBarJS(allUsers)
+}
+
+script SearchUserBarJS(allUsers Users) {
+		let searchInput = document.getElementById("search");
+		let users = allUsers;
+
+		searchInput.addEventListener("input", (e) => {
+		const value = e.target.value.toLowerCase();
+
+			users.data.forEach(user => {
+				const userElement = document.getElementById(`cardDivId${user.id}`)
+				if (userElement) {
+					const isVisible = (
+								user.firstname.toLowerCase().includes(value) ||
+								user.lastname.toLowerCase().includes(value) ||
+								user.email.toLowerCase().includes(value)
+					);
+					userElement.style.display = isVisible ? "block" : "none";
+				}
+			});
+		});
+}

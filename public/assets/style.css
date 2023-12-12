@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  font-family: 'Poppins', sans-serif;
+  
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: #31304D;
+  box-shadow: 0px 3, 7.5 rgba(0, 0, 0, 0.1);
+}
+
+.go-nav {
+  display: flex;
+
+}
+
+.go-icon {
+  width: 100px;
+}
+
+.proj-name {
+  font-size: 25px;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-left: 20px;
+  color: whitesmoke;
+}
+
+.nav-items {
+  margin-top: 10px;
+}
+
+.nav-items > ul {
+  display: flex;
+  list-style: none;
+}
+
+.nav-items > ul > li {
+  padding: 10px;
+  font-weight: 700;
+  font-size: 20px;
+  color: whitesmoke;
+}
+
+.contacts {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 60px;
+  padding: 40px;
+}
+
+.contact-card {
+  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.25);
+  display: flex;
+  padding: 15px;
+  border-radius: 10px;
+  flex-direction: column;
+  padding-bottom: 20px;
+  background-color: aquamarine;
+}
+
+.person-icon {
+  width: 100px;
+  border-radius: 5px;
+}
+
+.icon-name-text {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.person-icon-tel {
+  width: 20px;
+  margin-right: 15px;
+}
+
+.person-icon-email {
+  width: 20px;
+  margin-right: 15px;
+}
+
+.info-group {
+  display: flex;
+  align-items: baseline;
+}
+
+.btnDate {
+  margin-left: 10px;
+}
+
+.align-all {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.btnPlus {
+  display: block;
+  width: 35%;
+  margin: 0 auto;
+}
+
+.search-bar > input {
+  display: block;
+  width: 15%;
+  margin: 0 auto;
+}
+
+.spinner {
+  display: none;
+}
