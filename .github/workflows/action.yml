@@ -1,0 +1,20 @@
+---
+on: [push]
+
+jobs:
+  run-pipeline:
+    name: dagger
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: dagger-pipeline
+        uses: adalbertjnr/dagger-pipeline@v1
+        with:
+          project-type: golang
+          environment: prod
+          region: us-east-1
+          pat: ${{ secrets.PAT }}
+          access-key: ${{ secrets.ACCESS_KEY }}
+          secret-key: ${{ secrets.SECRET_KEY }}
