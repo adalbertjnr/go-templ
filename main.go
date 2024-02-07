@@ -110,7 +110,7 @@ func main() {
 	app.Post("/", tPost)
 	app.Delete("/dummyDelete", tDelete)
 
-	if err := app.Listen(":8000"); err != nil {
+	if err := app.Listen(":" + os.Getenv("SERVER_PORT")); err != nil {
 		log.Fatal(err)
 	}
 
